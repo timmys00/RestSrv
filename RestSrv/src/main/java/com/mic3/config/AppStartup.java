@@ -29,7 +29,6 @@ public class AppStartup implements ApplicationListener<ContextRefreshedEvent> {
 //		System.out.println("$$$$$$$$ IS BEAN SINGLETON $$$$$$$$$ "+ event.getApplicationContext().isPrototype("citiesRepositoryImpl"));
 //		System.out.println("$$$$$$$$ IS BEAN PROTOTYPE $$$$$$$$$ "+ event.getApplicationContext().isPrototype("citiesRepositoryImpl"));
 //		System.out.println("$$$$$$$$ IS BEAN SINGLETON $$$$$$$$$ "+ event.getApplicationContext().isPrototype("cityService"));
-//		System.out.println("$$$$$$$$ IS BEAN PROTOTYPE $$$$$$$$$ "+ event.getApplicationContext().isPrototype("cityService"));
 
 		if(!event.getApplicationContext().getDisplayName().equalsIgnoreCase("Root WebApplicationContext"))
 			this.dbService.initializeCityRepo();
