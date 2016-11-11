@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,7 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mic3.domain.City;
-import com.mic3.exceptions.CityNotFoundException;
+import com.mic3.exceptions.ResourceNotFoundExc;
+import com.mic3.exceptions.ResponseEntityErr;
 import com.mic3.services.CityService;
 
 @RestController
@@ -27,36 +30,29 @@ public class CitiesController {
 	
 	// FIND ALL
 	@RequestMapping(method=RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public @ResponseBody Callable<List<City>> findAllCities() {
-//	public @ResponseBody List<City> findAllCities() {
-		Callable<List<City>> asyncTask = new Callable<List<City>>() {
-			 
+	public @ResponseBody Callable<List<City>> findAllCities() throws Exception {
+		Callable<List<City>> asyncTask = new Callable<List<City>>() {			 
 		      @Override
 		      public List<City> call() throws Exception {
 		        return cityService.getAllCities();
 		      }
-		      
-		    };
-		     
+		};
+		if(asyncTask.call().isEmpty()){ throw new ResourceNotFoundExc(); }
+		
 		return asyncTask;
 	}
 		
 	@RequestMapping(value="/{country}", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public @ResponseBody Callable<List<City>> getCountrySpecific(@PathVariable("country") String country) {
-		Callable<List<City>> asyncTask = new Callable<List<City>>() {
-			 List<City> toReturn;
-		      @Override
-		      public List<City> call() throws Exception {
-		    	  toReturn = cityService.getCitiesInCountry(country);
-		    	  if(toReturn.isEmpty())
-		    		  throw new CityNotFoundException();
-		    	  
-		        return cityService.getCitiesInCountry(country);
-		      }
-		      
-		    };
-		     
-		return asyncTask;
+	public @ResponseBody ResponseEntity<?> getCountrySpecific(@PathVariable("country") String country) throws Exception {
+			Callable<List<City>> asyncTask = new Callable<List<City>>() {
+			      @Override
+			      public List<City> call() throws Exception {
+			    	  return cityService.getCitiesInCountry(country);
+			      } 
+			};
+			if(asyncTask.call().isEmpty()){ throw new ResourceNotFoundExc(country); }
+		
+		return new ResponseEntity<Callable<List<City>>>(asyncTask, HttpStatus.OK);
 	}
 	
 }

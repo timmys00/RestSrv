@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.ui.ModelMap;
@@ -57,5 +59,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
 		super.configureMessageConverters(converters);
 		converters.add(new MappingJackson2HttpMessageConverter());
+    }
+	
+	@Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		PropertySourcesPlaceholderConfigurer properties = new PropertySourcesPlaceholderConfigurer();
+		properties.setLocation(new ClassPathResource("config.properties"));
+		return properties;
     }
 }

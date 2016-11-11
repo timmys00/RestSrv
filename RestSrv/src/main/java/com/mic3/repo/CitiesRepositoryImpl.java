@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 import com.mic3.domain.City;
-import com.mic3.exceptions.CityNotFoundException;
+import com.mic3.exceptions.ResourceNotFoundExc;
 
 @Repository
 public class CitiesRepositoryImpl implements CitiesRepository {
