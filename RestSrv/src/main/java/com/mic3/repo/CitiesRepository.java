@@ -1,13 +1,11 @@
 package com.mic3.repo;
 
-import java.sql.ResultSet;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.List;
 
 import com.mic3.domain.City;
 
 
 public interface CitiesRepository {
-	ConcurrentHashMap<Integer, City> findSpecific(String country);
-	ConcurrentHashMap<Integer, City> findAll();
-	void FillRepository(ResultSet rs);
+	List<City> findSpecific(String country);
+	List<City> findAll();
 }

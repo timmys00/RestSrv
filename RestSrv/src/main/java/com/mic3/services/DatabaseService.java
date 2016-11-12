@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.mic3.domain.City;
 import com.mic3.repo.CitiesRepository;
 
+//SERVICE USED FOR TESTING
 @Service
 public class DatabaseService {
 
@@ -59,7 +60,7 @@ public class DatabaseService {
 			stmt = conn.prepareStatement(SQL_SELECT_CITIES, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			rs = stmt.executeQuery();
 
-			this.citiesRepository.FillRepository(rs);			
+//			this.citiesRepository.FillRepository(rs);			
 			
 		} catch (SQLException e) {
 			System.out.println("BAD BAD");
@@ -93,7 +94,7 @@ public class DatabaseService {
 				}
 			}
 		}
-		System.out.println("INIT DATABASE QUERY AND FILL REPO !!!!!!!!!!!!!!!!!!! ==== " + this.citiesRepository.findAll().size());
+//		System.out.println("INIT DATABASE QUERY AND FILL REPO !!!!!!!!!!!!!!!!!!! ==== " + this.citiesRepository.findAll().size());
 
 	}
 }

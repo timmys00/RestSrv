@@ -4,15 +4,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 import com.mic3.domain.City;
 import com.mic3.exceptions.ResourceNotFoundExc;
@@ -36,7 +32,6 @@ public class CitiesController {
 		Callable<List<City>> asyncTask = new Callable<List<City>>() {			 
 		      @Override
 		      public List<City> call() throws Exception {
-		    	  System.out.println("sasasa");
 		    	  return cityService.getAllCities();
 		      }
 		};
@@ -46,7 +41,7 @@ public class CitiesController {
 	}
 		
 	@RequestMapping(value="/{country}", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public @ResponseBody Callable<List<City>> getCountrySpecific(@RequestParam("country") String country) throws Exception {
+	public @ResponseBody Callable<List<City>> getCountrySpecific(@PathVariable("country") String country) throws Exception {
 		Callable<List<City>> asyncTask = new Callable<List<City>>() {
 			      @Override
 			      public List<City> call() throws Exception {

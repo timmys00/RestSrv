@@ -1,72 +1,39 @@
 package com.mic3.repo;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mic3.domain.City;
-import com.mic3.exceptions.ResourceNotFoundExc;
 
 @Repository
 @Transactional
 public class CitiesRepositoryImpl extends AbstractRepository<Integer, City> implements CitiesRepository {
 
-	private ConcurrentHashMap<Integer, City> all;
+	private List<City> all;
 	
 	public CitiesRepositoryImpl(){
-		all = new ConcurrentHashMap();
+		all = new ArrayList<>();
 	}
 	
-	public void FillRepository(ResultSet rs){
-		
-		try {
-			int rows = 0;
-			if (rs.last()) {
-			  rows = rs.getRow();
-			  rs.beforeFirst(); // not rs.first() because the rs.next() below will move on, missing the first element
-			}
-			City city;
-			
-			for(int i=1; rows>=i; i++){
-				if(rs.next()){
-					city = new City(
-							rs.getString("country"), rs.getString("city"), 
-							rs.getString("accent"), rs.getString("region"),
-							rs.getDouble("population"), rs.getDouble("longitude"), 
-							rs.getDouble("latitude"));
-					
-					this.all.put(i, city);
-				}
-			}
-		
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public ConcurrentHashMap<Integer, City> findSpecific(String country) {
-		ConcurrentHashMap<Integer, City> toReturn = (ConcurrentHashMap<Integer, City>) this.all.entrySet()
-		.stream().filter(e -> e.getValue().getCountry().equalsIgnoreCase(country))
-		.collect(Collectors.toConcurrentMap(Map.Entry::getKey, Map.Entry::getValue));
-
+	public List<City> findSpecific(String country) {
+		Criteria criteria = createEntityCriteria();
+		List<City> toReturn;
+		Stream<City> myStream = ((List<City>)criteria.list()).stream();
+		toReturn = myStream.filter(city -> city.getCountry().equalsIgnoreCase(country))
+				.collect(Collectors.toList());
 		return toReturn;
 	}
 
-	public ConcurrentHashMap<Integer, City> findAll() {
+	public List<City> findAll() {
 		Criteria criteria = createEntityCriteria();
-		List<City> ebate = (List<City>)criteria.list();
-        return this.all;//(ConcurrentHashMap<Integer, City>) ;
-//		return this.all;
+		List<City> toReturn = (List<City>)criteria.list();
+		return toReturn;
 	}
 
 }
