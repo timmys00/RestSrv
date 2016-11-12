@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 
 import com.mic3.domain.City;
 import com.mic3.exceptions.ResourceNotFoundExc;
@@ -34,17 +36,18 @@ public class CitiesController {
 		Callable<List<City>> asyncTask = new Callable<List<City>>() {			 
 		      @Override
 		      public List<City> call() throws Exception {
-		        return cityService.getAllCities();
+		    	  System.out.println("sasasa");
+		    	  return cityService.getAllCities();
 		      }
 		};
-		if(asyncTask.call().isEmpty()){ throw new ResourceNotFoundExc(); }
+		if(asyncTask.call().isEmpty()){ System.out.println("blablaw"); throw new ResourceNotFoundExc(); }
 		
 		return asyncTask;
 	}
 		
 	@RequestMapping(value="/{country}", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public @ResponseBody ResponseEntity<?> getCountrySpecific(@PathVariable("country") String country) throws Exception {
-			Callable<List<City>> asyncTask = new Callable<List<City>>() {
+	public @ResponseBody Callable<List<City>> getCountrySpecific(@RequestParam("country") String country) throws Exception {
+		Callable<List<City>> asyncTask = new Callable<List<City>>() {
 			      @Override
 			      public List<City> call() throws Exception {
 			    	  return cityService.getCitiesInCountry(country);
@@ -52,7 +55,7 @@ public class CitiesController {
 			};
 			if(asyncTask.call().isEmpty()){ throw new ResourceNotFoundExc(country); }
 		
-		return new ResponseEntity<Callable<List<City>>>(asyncTask, HttpStatus.OK);
+		return asyncTask;
 	}
 	
 }

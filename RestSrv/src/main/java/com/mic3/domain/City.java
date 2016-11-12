@@ -1,8 +1,19 @@
 package com.mic3.domain;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name="cities")
 public class City {
 	
-	public City(){}
+	protected City(){}
 	
 	public City(String country, String city, String accent, String region, double population, double lon, double lat){
 		this.setCountry(country);
@@ -56,12 +67,34 @@ public class City {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
+	
+	@NotNull
+	@Column(name = "country", nullable = false)
 	public String country;
+
+	@Id
+	@NotNull
+	@Column(name = "city", nullable = false)
 	public String city;
+
+	@NotNull
+	@Column(name = "accent", nullable = false)
 	public String accent;
+
+	@NotNull
+	@Column(name = "region", nullable = false)
 	public String region;
+
+	@NotNull
+	@Column(name = "population", nullable = false)
 	public double population;
+
+	@NotNull
+	@Column(name = "latitude", nullable = false)
 	public double latitude ;
+
+	@NotNull
+	@Column(name = "longitude", nullable = false)
 	public double longitude;
 
 }

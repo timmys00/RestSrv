@@ -3,6 +3,7 @@ package com.mic3.exceptions;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.DataAccessException;
@@ -38,6 +39,13 @@ public class ServiceExceptionHandler {
     @ResponseBody
     public ResponseEntityErr databaseError(NestedRuntimeException ex) {
     	return new ResponseEntityErr(6, ex.getRootCause().getMessage());
+    }
+    
+    @ExceptionHandler({ HibernateException.class })
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResponseEntityErr databaseError(HibernateException ex) {
+    	return new ResponseEntityErr(6, ex.getMessage());
     }
 
     @ExceptionHandler({ Exception.class })

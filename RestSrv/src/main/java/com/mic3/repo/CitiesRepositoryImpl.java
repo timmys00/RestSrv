@@ -9,13 +9,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mic3.domain.City;
 import com.mic3.exceptions.ResourceNotFoundExc;
 
 @Repository
-public class CitiesRepositoryImpl implements CitiesRepository {
+@Transactional
+public class CitiesRepositoryImpl extends AbstractRepository<Integer, City> implements CitiesRepository {
 
 	private ConcurrentHashMap<Integer, City> all;
 	
@@ -60,7 +63,10 @@ public class CitiesRepositoryImpl implements CitiesRepository {
 	}
 
 	public ConcurrentHashMap<Integer, City> findAll() {
-		return this.all;
+		Criteria criteria = createEntityCriteria();
+		List<City> ebate = (List<City>)criteria.list();
+        return this.all;//(ConcurrentHashMap<Integer, City>) ;
+//		return this.all;
 	}
 
 }

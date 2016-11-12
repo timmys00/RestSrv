@@ -20,8 +20,8 @@ public class AppStartup implements ApplicationListener<ContextRefreshedEvent> {
 	
 	@Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-//		System.out.println("$$$$$$$$ CONTEXT NAME $$$$$$$$$$ "+ event.getApplicationContext().getDisplayName());
-//		System.out.println("$$$$$$$$ BEAN COUNT $$$$$$$$$ "+ event.getApplicationContext().getBeanDefinitionCount());
+		System.out.println("$$$$$$$$ CONTEXT NAME $$$$$$$$$$ "+ event.getApplicationContext().getDisplayName());
+		System.out.println("$$$$$$$$ BEAN COUNT $$$$$$$$$ "+ event.getApplicationContext().getBeanDefinitionCount());
 //		System.out.println("$$$$$$$$ STARTUP DATE $$$$$$$$$ "+ event.getApplicationContext().getStartupDate());
 //		System.out.println("$$$$$$$$ IS BEAN SINGLETON $$$$$$$$$ "+ event.getApplicationContext().isSingleton("databaseService"));
 //		System.out.println("$$$$$$$$ IS BEAN PROTOTYPE $$$$$$$$$ "+ event.getApplicationContext().isPrototype("databaseService"));

@@ -1,6 +1,7 @@
 package com.mic3.config;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,23 +10,21 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.context.request.WebRequestInterceptor;
-import org.springframework.web.servlet.ViewResolver;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
+
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import com.mic3.interceptors.LoggingInterceptor;
+import com.mic3.interceptors.CallableRequestInterceptor;
 import com.mic3.interceptors.RequestInterceptor;
 
 
 @Configuration
 @EnableWebMvc
+@EnableAsync
 @ComponentScan(basePackages="com.mic3")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -46,12 +45,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
-		
+
+	@Override
+	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+		super.configureAsyncSupport(configurer);
+		configurer.registerCallableInterceptors(new CallableRequestInterceptor());
+		configurer.setTaskExecutor(new ConcurrentTaskExecutor(Executors.newCachedThreadPool()));
+	}
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		super.addInterceptors(registry);
-		registry.addWebRequestInterceptor(new RequestInterceptor());
-		registry.addInterceptor(new LoggingInterceptor());
+		registry.addInterceptor(new RequestInterceptor());
 	}
 	
 	
